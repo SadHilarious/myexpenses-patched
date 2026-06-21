@@ -32,6 +32,15 @@ jobs:
         run: |
           python patch-repo/patch.py src/myExpenses/src/main/java/org/totschnig/myexpenses/util/licence/LicenceHandler.kt
 
+      - name: Enable Google Drive Module and Dynamic Features
+        working-directory: src
+        run: |
+          # Uncomment drive module in settings.gradle
+          sed -i "s/\/\/include ':drive'/include ':drive'/g" settings.gradle
+          
+          # Add drive to dynamicFeatures in myExpenses/build.gradle
+          sed -i "s/dynamicFeatures = \[':ocr'/dynamicFeatures = \[':drive', ':ocr'/g" myExpenses/build.gradle
+
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -42,12 +51,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x src/gradlew
 
-      - name: Build Debug APK
+      - name: Build Universal Debug APK
         working-directory: src
-        run: ./gradlew myExpenses:assembleExternDebug
+        run: ./gradlew myExpenses:packageExternDebugUniversalApk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: myexpenses-patched-debug
-          path: src/myExpenses/build/outputs/apk/extern/debug/*.apk
+          name: myexpenses-patched-universal-debug
+          path: src/myExpenses/build/outputs/apk_from_bundle/externDebug/*.apk
