@@ -42,7 +42,7 @@ jobs:
           sed -i "s/dynamicFeatures = \[':ocr'/dynamicFeatures = \[':drive', ':ocr'/g" myExpenses/build.gradle
           
           # Add play-services-auth to the base module to fix missing google_play_services_version
-          echo "dependencies { implementation libs.play.services.auth }" >> myExpenses/build.gradle
+          echo "; dependencies { implementation libs.play.services.auth }" >> myExpenses/build.gradle
 
       - name: Set up JDK 21
         uses: actions/setup-java@v5
